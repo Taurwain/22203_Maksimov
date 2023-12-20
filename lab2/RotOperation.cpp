@@ -1,6 +1,6 @@
 #include "RotOperation.h"
 
-void RotOperation::statement(std::stack<int>& stack, Reader& reader, Writer& writer) {
+void RotOperation::expression(std::stack<int>& stack, Reader& reader, Writer& writer) {
     if (!Utilities::checkThreeOperands(stack)) {
         throw std::out_of_range( "Error: not enough operands");
     }

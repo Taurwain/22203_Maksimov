@@ -1,29 +1,41 @@
 #include "Reader.h"
 
 void Reader::open(const std::string& INPUT_FILE) {
-    if (inputFile.is_open()) {
+    if (is_open()) {
         inputFile.close();
     }
     inputFile.open(INPUT_FILE);
-    if (!inputFile.is_open()) {
+    if (!is_open()) {
         throw std::ios_base::failure("Error: The file cannot be opened!");
     }
 }
 
-void Reader::readNextLine() {
+void Reader::createStringStream(const std::string& in) {
+    bufStream = std::move(std::istringstream(in));
+}
+
+bool Reader::is_open() {
+    return inputFile.is_open();
+}
+
+bool Reader::eof() {
+    return inputFile.eof();
+}
+
+std::string Reader::readNextLine() {
     std::string codeLine;
-    std::getline(std::cin, codeLine);
+    if (inputFile.is_open()) {
+        std::getline(inputFile, codeLine);
+    } else {
+        std::getline(std::cin, codeLine);
+    }
     std::istringstream newBufStream(codeLine);
-    bufStream = std::move(newBufStream);
+    return codeLine;
 }
 
 std::string Reader::getWord() {
     std::string word;
-    if (inputFile.is_open()) {
-        inputFile >> word;
-    } else {
-        bufStream >> word;
-    }
+    bufStream >> word;
     return word;
 }
 
@@ -43,22 +55,12 @@ std::string Reader::getStringToSymbol(char symbol) {
     std::string string;
     char c;
 
-    if (inputFile.is_open()) {
-        while (inputFile.get(c)) {
-            string += c;
-            if (c == symbol) {
-                break;
-            }
-        }
-    } else {
-        while (bufStream.get(c)) {
-            string += c;
-            if (c == symbol) {
-                break;
-            }
+    while (bufStream.get(c)) {
+        string += c;
+        if (c == symbol) {
+            break;
         }
     }
-
     return string;
 }
 

@@ -1,6 +1,6 @@
 #include "LtOperation.h"
 
-void LtOperation::statement(std::stack<int>& stack, Reader& reader, Writer& writer) {
+void LtOperation::expression(std::stack<int>& stack, Reader& reader, Writer& writer) {
     if (!Utilities::checkTwoOperands(stack)) {
         throw std::out_of_range( "Error: not enough operands");
     }

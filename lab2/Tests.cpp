@@ -4,10 +4,10 @@
 #include "Utilities.h"
 
 TEST(Tests, arithmeticOperations) {
-    Interpreter interpreter;
-    std::fstream inputFile;
-    std::ifstream outputFile;
-    std::string output;
+    Reader _reader;
+    Writer _writer;
+    //_reader.open("in.txt");
+    //_writer.open("out.txt");
 
     std::vector<std::pair<std::string, std::string>> correctExpressionTestDataset = {
             {"3", ""},
@@ -26,16 +26,10 @@ TEST(Tests, arithmeticOperations) {
     };
 
     for (const auto& i : correctExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i.first;
-        inputFile.close();
-
-        interpreter.interpret("in.txt","out.txt");
-        outputFile.open("out.txt", std::ios::in);
-
-        std::getline(outputFile, output);
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        interpreter.stringInterpret(i.first, output);
         ASSERT_EQ(output, i.second);
-        outputFile.close();
     }
 
     std::vector<std::string> wrongExpressionTestDataset = {
@@ -52,10 +46,9 @@ TEST(Tests, arithmeticOperations) {
     };
 
     for (const auto& i : wrongExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::out_of_range);
     }
 
@@ -65,10 +58,9 @@ TEST(Tests, arithmeticOperations) {
     };
 
     for (const auto& i : forbiddenExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::runtime_error);
     }
 
@@ -84,19 +76,16 @@ TEST(Tests, arithmeticOperations) {
     };
 
     for (const auto& i : operationOverflowTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::overflow_error);
     }
 }
 
 TEST(Tests, logicOperations) {
-    Interpreter interpreter;
-    std::fstream inputFile;
-    std::ifstream outputFile;
-    std::string output;
+    Reader _reader;
+    Writer _writer;
 
     std::vector<std::pair<std::string, std::string>> correctExpressionTestDataset = {
             {"3", ""},
@@ -118,16 +107,10 @@ TEST(Tests, logicOperations) {
     };
 
     for (const auto& i : correctExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i.first;
-        inputFile.close();
-
-        interpreter.interpret("in.txt","out.txt");
-        outputFile.open("out.txt", std::ios::in);
-
-        std::getline(outputFile, output);
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        interpreter.stringInterpret(i.first, output);
         ASSERT_EQ(output, i.second);
-        outputFile.close();
     }
 
     std::vector<std::string> wrongExpressionTestDataset = {
@@ -140,19 +123,16 @@ TEST(Tests, logicOperations) {
     };
 
     for (const auto& i : wrongExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::out_of_range);
     }
 }
 
 TEST(Tests, stackOperations) {
-    Interpreter interpreter;
-    std::fstream inputFile;
-    std::ifstream outputFile;
-    std::string output;
+    Reader _reader;
+    Writer _writer;
 
     std::vector<std::pair<std::string, std::string>> correctExpressionTestDataset = {
             {"3 DROP", ""},
@@ -191,16 +171,10 @@ TEST(Tests, stackOperations) {
     };
 
     for (const auto& i : correctExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i.first;
-        inputFile.close();
-
-        interpreter.interpret("in.txt","out.txt");
-        outputFile.open("out.txt", std::ios::in);
-
-        std::getline(outputFile, output);
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        interpreter.stringInterpret(i.first, output);
         ASSERT_EQ(output, i.second);
-        outputFile.close();
     }
 
     std::vector<std::string> wrongExpressionTestDataset {
@@ -219,23 +193,20 @@ TEST(Tests, stackOperations) {
     };
 
     for (const auto& i : wrongExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::out_of_range);
     }
 }
 
 TEST(Tests, outputOperations) {
-    Interpreter interpreter;
-    std::fstream inputFile;
-    std::ifstream outputFile;
-    std::string output;
+    Reader _reader;
+    Writer _writer;
 
     std::vector<std::pair<std::string, std::string>> correctExpressionTestDataset = {
-            {"CR 3", ""},
-            {"CR", ""},
+            {"CR 3", "\n"},
+            {"CR", "\n"},
             {"3", ""},
             {"3 .", "3"},
             {"3 3 3 3 3 .", "3"},
@@ -250,16 +221,10 @@ TEST(Tests, outputOperations) {
     };
 
     for (const auto& i : correctExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i.first;
-        inputFile.close();
-
-        interpreter.interpret("in.txt","out.txt");
-        outputFile.open("out.txt", std::ios::in);
-
-        std::getline(outputFile, output);
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        interpreter.stringInterpret(i.first, output);
         ASSERT_EQ(output, i.second);
-        outputFile.close();
     }
 
     std::vector<std::string> wrongExpressionTestDataset {
@@ -273,19 +238,16 @@ TEST(Tests, outputOperations) {
     };
 
     for (const auto& i : wrongExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::out_of_range);
     }
 }
 
 TEST(Tests, branchingOperations) {
-    Interpreter interpreter;
-    std::fstream inputFile;
-    std::ifstream outputFile;
-    std::string output;
+    Reader _reader;
+    Writer _writer;
 
     std::vector<std::pair<std::string, std::string>> correctExpressionTestDataset = {
             {"1 IF THEN ;",""},
@@ -322,16 +284,10 @@ TEST(Tests, branchingOperations) {
     };
 
     for (const auto& i : correctExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i.first;
-        inputFile.close();
-
-        interpreter.interpret("in.txt","out.txt");
-        outputFile.open("out.txt", std::ios::in);
-
-        std::getline(outputFile, output);
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        interpreter.stringInterpret(i.first, output);
         ASSERT_EQ(output, i.second);
-        outputFile.close();
     }
 
     std::vector<std::string> wrongExpressionTestDataset {
@@ -364,10 +320,9 @@ TEST(Tests, branchingOperations) {
     };
 
     for (const auto& i : wrongExpressionTestDataset) {
-        inputFile.open("in.txt", std::ios::out | std::ios::trunc);
-        inputFile << i;
-        inputFile.close();
-        ASSERT_THROW(interpreter.interpret("in.txt","out.txt"),
+        Interpreter interpreter(std::move(_reader), std::move(_writer));
+        std::string output;
+        ASSERT_THROW(interpreter.stringInterpret(i, output),
                      std::out_of_range);
     }
 }

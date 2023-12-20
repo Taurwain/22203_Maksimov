@@ -1,7 +1,8 @@
 #include <vector>
 #include "ForOperation.h"
+#include "memory"
 
-void ForOperation::statement(std::stack<int> &stack, Reader &reader, Writer &writer) {
+void ForOperation::expression(std::stack<int> &stack, Reader &reader, Writer &writer) {
     if (!Utilities::checkTwoOperands(stack)) {
         throw std::out_of_range( "Error: not enough operands");
     }
@@ -30,8 +31,8 @@ void ForOperation::statement(std::stack<int> &stack, Reader &reader, Writer &wri
                 stack.push(i);
 
             } else if (factory->contains(word)) {
-                Operation *operation = factory->get(word);
-                operation->statement(stack, reader, writer);
+                auto operation = std::unique_ptr<Operation>(factory->get(word));
+                operation->expression(stack, reader, writer);
 
             } else throw std::out_of_range("The unknown operation!");
         }

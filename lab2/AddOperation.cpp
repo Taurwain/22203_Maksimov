@@ -2,7 +2,7 @@
 #include "OperationRegistrar.h"
 #include "OperationFactory.h"
 
-void AddOperation::statement(std::stack<int>& stack, Reader& reader, Writer& writer) {
+void AddOperation::expression(std::stack<int>& stack, Reader& reader, Writer& writer) {
     if (!Utilities::checkTwoOperands(stack)) {
         throw std::out_of_range( "Error: not enough operands");
     }

@@ -1,6 +1,6 @@
 #include "DupOperation.h"
 
-void DupOperation::statement(std::stack<int>& stack, Reader& reader, Writer& writer) {
+void DupOperation::expression(std::stack<int>& stack, Reader& reader, Writer& writer) {
     if (!Utilities::checkTheValue(stack)) {
         throw std::out_of_range( "Error: not enough operands");
     }
@@ -8,5 +8,5 @@ void DupOperation::statement(std::stack<int>& stack, Reader& reader, Writer& wri
 }
 
 namespace {
-    OperationRegistrar<DupOperation> AddOperation("DUP");
+    OperationRegistrar<DupOperation> DupOperation("DUP");
 }

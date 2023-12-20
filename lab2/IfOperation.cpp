@@ -1,8 +1,9 @@
 #include "IfOperation.h"
+#include "memory"
 
-void IfOperation::statement(std::stack<int> &stack, Reader &reader, Writer &writer) {
+void IfOperation::expression(std::stack<int> &stack, Reader &reader, Writer &writer) {
     if (!Utilities::checkTheValue(stack)) {
-        throw std::out_of_range( "Error: not enough operands");
+        throw std::out_of_range("Error: not enough operands");
     }
     int cond = stack.top();
     stack.pop();
@@ -22,13 +23,9 @@ void IfOperation::statement(std::stack<int> &stack, Reader &reader, Writer &writ
             if (Utilities::isNumber(word)) {
                 stack.push(std::stoi(word));
 
-            } /*else if (word == "IF") {
-                this->statement(stack, reader, writer);
-
-            }*/
-            else if (factory->contains(word)) {
-                Operation *operation = factory->get(word);
-                operation->statement(stack, reader, writer);
+            } else if (factory->contains(word)) {
+                auto operation = std::unique_ptr<Operation>(factory->get(word));
+                operation->expression(stack, reader, writer);
 
             } else throw std::out_of_range("The unknown operation!");
         }
@@ -52,7 +49,7 @@ void IfOperation::statement(std::stack<int> &stack, Reader &reader, Writer &writ
         }
         throw std::out_of_range("Error: syntax issue with \"if\"");
 
-        } else {
+    } else {
         while ((word = reader.getWord()) != "") {
             if (word == "ELSE") {
                 if (ifCounter == 1) {
@@ -84,7 +81,7 @@ void IfOperation::statement(std::stack<int> &stack, Reader &reader, Writer &writ
 
             } else if (factory->contains(word)) {
                 Operation *operation = factory->get(word);
-                operation->statement(stack, reader, writer);
+                operation->expression(stack, reader, writer);
 
             } else throw std::out_of_range("The unknown operation!");
         }

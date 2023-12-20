@@ -6,7 +6,7 @@
 
 class SwapOperation : public Operation {
 public:
-    void statement(std::stack<int>& stack, Reader& reader, Writer& writer) override;
+    void expression(std::stack<int>& stack, Reader& reader, Writer& writer) override;
 };
 
 #endif //LAB2_SWAPOPERATION_H

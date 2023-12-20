@@ -23,21 +23,33 @@ void Writer::flagDown() {
 }
 
 void Writer::write(int number) {
-    if (outputFile.is_open()) {
-        outputFile << number << std::endl;
-    } else std::cout << number << std::endl;
+    outputLine += std::to_string(number);
 }
 
 void Writer::write(const std::string& word) {
-    if (outputFile.is_open()) {
-        outputFile << word << std::endl;
-    } else std::cout << word << std::endl;
+    outputLine += word;
 }
 
 void Writer::write(char symbol) {
+    outputLine += symbol;
+}
+
+void Writer::writeOutline(std::string& out) {
+    if (out.empty()) {
+        return;
+    }
     if (outputFile.is_open()) {
-        outputFile << symbol << std::endl;
-    } else std::cout << symbol << std::endl;
+        outputFile << out << " ";
+    } else {
+        std::cout << out << std::endl;
+    }
+    outputLine = "";
+}
+
+std::string Writer::getOutline() {
+    std::string output = outputLine;
+    outputLine = "";
+    return output;
 }
 
 void Writer::writeRightArrow() {
@@ -46,6 +58,10 @@ void Writer::writeRightArrow() {
 
 void Writer::writeLeftArrow() {
     if (!outputFile.is_open()) std::cout << "< ";
+}
+
+void Writer::writeOK() {
+    if (!outputFile.is_open()) std::cout << "ok" << std::endl;
 }
 
 Writer::~Writer() {

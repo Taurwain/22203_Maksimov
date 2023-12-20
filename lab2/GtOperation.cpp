@@ -1,6 +1,6 @@
 #include "GtOperation.h"
 
-void GtOperation::statement(std::stack<int>& stack, Reader& reader, Writer& writer) {
+void GtOperation::expression(std::stack<int>& stack, Reader& reader, Writer& writer) {
     if (!Utilities::checkTwoOperands(stack)) {
         throw std::out_of_range( "Error: not enough operands");
     }

@@ -10,9 +10,10 @@
 
 class Interpreter {
 public:
-    Interpreter() = default;
+    Interpreter(Reader&& _reader, Writer&& _writer)
+        : reader(std::move(_reader)), writer(std::move(_writer)) {};
     void interpret();
-    void interpret(const std::string& INPUT_FILE, const std::string& OUTPUT_FILE);
+    void stringInterpret(const std::string& in, std::string& out);
 
 private:
     Reader reader;

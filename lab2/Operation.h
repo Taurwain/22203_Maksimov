@@ -10,7 +10,8 @@
 
 class Operation {
 public:
-    virtual void statement(std::stack<int>& stack, Reader& reader, Writer& writer) = 0;
+    virtual void expression(std::stack<int>& stack, Reader& reader, Writer& writer) = 0;
+    virtual ~Operation() = default;
 };
 
 #endif //LAB2_OPERATION_H
